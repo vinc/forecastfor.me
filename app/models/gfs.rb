@@ -9,9 +9,13 @@ class GFS
     'TCDC:entire atmosphere'
   ]
 
-  def initialize(time = Time.now)
-    @yyyymmdd = time.strftime('%Y%m%d')
-    @cc = '00'
+  def initialize(yyyymmddcc = "#{Time.now.strftime('%Y%m%d')}00")
+    @yyyymmdd = yyyymmddcc[0..7]
+    @cc = yyyymmddcc[8..9]
+  end
+
+  def time
+    Time.parse("#{@yyyymmdd}#{@cc} +0000")
   end
 
   def record(name:, forcast:, latitude:, longitude:)
