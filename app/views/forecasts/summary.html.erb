@@ -1,0 +1,37 @@
+<h1><%= gfs.time.strftime('%B %d') %></h1>
+
+<p class="forecast">
+  <% if forecast_summary[:cloud_cover] < 10 %>
+    Clear
+  <% elsif forecast_summary[:cloud_cover] < 50 %>
+    Partly cloudy
+  <% elsif forecast_summary[:cloud_cover] < 75 %>
+    Mostly cloudy
+  <% else %>
+    Cloudy
+  <% end %>
+  <% if forecast_summary[:precipitations] > 1.0 %>
+    with
+    <%= forecast_summary[:precipitations] %>
+    <%= forecast_summary[:precipitations_unit] %>
+    of rain
+  <% end %>
+</p>
+
+<p class="temperature">
+  Temperature from
+  <%= forecast_summary[:temperature_min] %>
+  <%= forecast_summary[:temperature_unit] %>
+  to
+  <%= forecast_summary[:temperature_max] %>
+  <%= forecast_summary[:temperature_unit] %>
+</p>
+
+<p class="wind">
+  Wind from
+  <%= forecast_summary[:wind_min] %>
+  <%= forecast_summary[:wind_unit] %>
+  to
+  <%= forecast_summary[:wind_max] %>
+  <%= forecast_summary[:wind_unit] %>
+</p>

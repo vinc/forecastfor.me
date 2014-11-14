@@ -1,4 +1,4 @@
-class Forcast
+class Forecast
   attr_accessor :longitude, :latitude
 
   def initialize(gfs, hour)
@@ -51,7 +51,7 @@ class Forcast
   def read(name)
     @memoized_reads[name] ||= @gfs.record(
       name: name,
-      forcast: @hour,
+      forecast: @hour,
       longitude: @longitude,
       latitude: @latitude
     )

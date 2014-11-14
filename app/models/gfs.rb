@@ -32,8 +32,8 @@ class GFS
     Time.parse("#{@yyyymmdd}#{@cc} +0000")
   end
 
-  def record(name:, forcast:, latitude:, longitude:)
-    hh = '%02d' % forcast
+  def record(name:, forecast:, latitude:, longitude:)
+    hh = '%02d' % forecast
     filename = "gfs.t#{@cc}z.pgrb2f#{hh}"
 
     Dir.chdir(Rails.root.join('tmp', 'gfs', @yyyymmdd)) do
@@ -50,8 +50,8 @@ class GFS
     curl = 'curl -O -f -s -S'
     FileUtils.mkpath(Rails.root.join('tmp', 'gfs', @yyyymmdd))
     Dir.chdir(Rails.root.join('tmp', 'gfs', @yyyymmdd)) do
-      (3..24).step(3).map do |forcast|
-        hh = '%02d' % forcast
+      (3..24).step(3).map do |forecast|
+        hh = '%02d' % forecast
         filename = "gfs.t#{@cc}z.pgrb2f#{hh}"
         url = "#{GFS::SERVER}/gfs.#{@yyyymmdd}#{@cc}/#{filename}"
 
