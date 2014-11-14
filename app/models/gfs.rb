@@ -9,9 +9,23 @@ class GFS
     'TCDC:entire atmosphere'
   ]
 
+  def self.all
+    Dir.foreach(Rails.root.join('tmp', 'gfs')).
+      select { |dir| /\d{8}/ =~ dir }.
+      map { |dir| GFS.new("#{dir}00") }
+  end
+
+  def self.last
+    self.all.last
+  end
+
   def initialize(yyyymmddcc = "#{Time.now.strftime('%Y%m%d')}00")
     @yyyymmdd = yyyymmddcc[0..7]
     @cc = yyyymmddcc[8..9]
+  end
+
+  def path
+    "/runs/#{@yyyymmdd}"
   end
 
   def time

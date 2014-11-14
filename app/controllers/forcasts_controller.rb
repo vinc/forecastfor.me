@@ -1,7 +1,6 @@
 class ForcastsController < ApplicationController
   expose(:gfs) do
-    yyyymmddcc = params[:run_id] || "#{Time.now.strftime('%Y%m%d')}00"
-    GFS.new(yyyymmddcc)
+    params[:run_id] ? GFS.new(params[:run_id]) : GFS.last
   end
 
   expose(:forcasts) do
@@ -27,13 +26,7 @@ class ForcastsController < ApplicationController
     respond_with(forcast)
   end
 
-  def now
-    self.forcast = forcasts[Time.now.utc.hour / 3]
-
-    respond_with(forcast)
-  end
-
-  def today
+  def summary
     respond_with({
       date: gfs.time.to_date,
       longitude: forcasts.first.longitude,

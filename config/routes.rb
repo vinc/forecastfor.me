@@ -1,12 +1,17 @@
 Rails.application.routes.draw do
   resources :runs do
+    collection do
+      get 'latest', to: redirect { GFS.last.path }
+    end
+
     resources :forcasts do
       collection do
-        get 'now'
-        get 'today'
+        get 'summary'
       end
     end
   end
+
+  root 'forcasts#summary'
 
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
