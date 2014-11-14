@@ -18,16 +18,8 @@ class ForcastsController < ApplicationController
     forcasts[Integer(params[:id] || '0') / 3]
   end
 
-  def index
-    respond_with(forcasts)
-  end
-
-  def show
-    respond_with(forcast)
-  end
-
-  def summary
-    respond_with({
+  expose(:forcast_summary) do
+    {
       date: gfs.time.to_date,
       longitude: forcasts.first.longitude,
       latitude: forcasts.first.latitude,
@@ -40,6 +32,18 @@ class ForcastsController < ApplicationController
       wind_unit: 'km/h',
       cloud_cover: forcasts.map(&:cloud_cover).sum / forcasts.size,
       cloud_cover_unit: '%'
-    })
+    }
+  end
+
+  def index
+    respond_with(forcasts)
+  end
+
+  def show
+    respond_with(forcast)
+  end
+
+  def summary
+    respond_with(forcast_summary)
   end
 end

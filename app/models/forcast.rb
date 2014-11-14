@@ -4,6 +4,7 @@ class Forcast
   def initialize(gfs, hour)
     @gfs = gfs
     @hour = hour
+    @memoized_reads = {}
   end
  
   def set_location(longitude:, latitude:)
@@ -48,7 +49,7 @@ class Forcast
   protected
 
   def read(name)
-    @gfs.record(
+    @memoized_reads[name] ||= @gfs.record(
       name: name,
       forcast: @hour,
       longitude: @longitude,

@@ -1,0 +1,28 @@
+<h1><%= gfs.time.strftime('%B %d') %></h1>
+
+<p class="forcast">
+  <% if forcast_summary[:cloud_cover] < 10 %>
+    Clear
+  <% elsif forcast_summary[:cloud_cover] < 50 %>
+    Partly cloudy
+  <% elsif forcast_summary[:cloud_cover] < 75 %>
+    Mostly cloudy
+  <% else %>
+    Cloudy
+  <% end %>
+  <% if forcast_summary[:precipitations] > 1.0 %>
+    with
+    <%= forcast_summary[:precipitations] %>
+    <%= forcast_summary[:precipitations_unit] %>
+    of rain
+  <% end %>
+</p>
+
+<p class="temperatures">
+  Temperatures ranging from
+  <%= forcast_summary[:temperature_min] %>
+  <%= forcast_summary[:temperature_unit] %>
+  to
+  <%= forcast_summary[:temperature_max] %>
+  <%= forcast_summary[:temperature_unit] %>
+</p>
