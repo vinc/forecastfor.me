@@ -18,11 +18,20 @@
   <% end %>
 </p>
 
-<p class="temperatures">
-  Temperatures ranging from
+<p class="temperature">
+  Temperature from
   <%= forcast_summary[:temperature_min] %>
   <%= forcast_summary[:temperature_unit] %>
   to
   <%= forcast_summary[:temperature_max] %>
   <%= forcast_summary[:temperature_unit] %>
+</p>
+
+<p class="wind">
+  Wind from
+  <%= forcast_summary[:wind_min] %>
+  <%= forcast_summary[:wind_unit] %>
+  to
+  <%= forcast_summary[:wind_max] %>
+  <%= forcast_summary[:wind_unit] %>
 </p>

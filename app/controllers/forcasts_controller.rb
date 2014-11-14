@@ -28,8 +28,9 @@ class ForcastsController < ApplicationController
       temperature_max: forcasts.map(&:temperature).max,
       temperature_min: forcasts.map(&:temperature).min,
       temperature_unit: '°C',
-      wind: forcasts.map(&:wind).sum / forcasts.size,
-      wind_unit: 'km/h',
+      wind_max: forcasts.map(&:wind).max,
+      wind_min: forcasts.map(&:wind).min,
+      wind_unit: 'm/s',
       cloud_cover: forcasts.map(&:cloud_cover).sum / forcasts.size,
       cloud_cover_unit: '%'
     }

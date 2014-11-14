@@ -23,7 +23,7 @@ class Forcast
   def wind
     u = self.read('UGRD')
     v = self.read('VGRD')
-    (Math.sqrt(u ** 2 + v ** 2) * 3.6).round
+    Math.sqrt(u ** 2 + v ** 2).round
   end
 
   def cloud_cover
@@ -40,7 +40,7 @@ class Forcast
       temperature: self.temperature,
       temperature_unit: '°C',
       wind: self.wind,
-      wind_unit: 'km/h',
+      wind_unit: 'm/s',
       cloud_cover: self.cloud_cover,
       cloud_cover_unit: '%'
     }
