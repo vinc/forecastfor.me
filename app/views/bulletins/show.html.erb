@@ -1,0 +1,37 @@
+<h1><%= gfs.time.strftime('%B %d') %></h1>
+
+<p class="forecast">
+  <% if bulletin.as_json[:cloud_cover] < 10 %>
+    Clear
+  <% elsif bulletin.as_json[:cloud_cover] < 50 %>
+    Partly cloudy
+  <% elsif bulletin.as_json[:cloud_cover] < 75 %>
+    Mostly cloudy
+  <% else %>
+    Cloudy
+  <% end %>
+  <% if bulletin.as_json[:precipitations] > 1.0 %>
+    with
+    <%= number_with_precision(bulletin.as_json[:precipitations], precision: 1) %>
+    <%= bulletin.as_json[:precipitations_unit] %>
+    of rain
+  <% end %>
+</p>
+
+<p class="temperature">
+  Temperature from
+  <%= bulletin.as_json[:temperature_min] %>
+  <%= bulletin.as_json[:temperature_unit] %>
+  to
+  <%= bulletin.as_json[:temperature_max] %>
+  <%= bulletin.as_json[:temperature_unit] %>
+</p>
+
+<p class="wind">
+  Wind from
+  <%= bulletin.as_json[:wind_min] %>
+  <%= bulletin.as_json[:wind_unit] %>
+  to
+  <%= bulletin.as_json[:wind_max] %>
+  <%= bulletin.as_json[:wind_unit] %>
+</p>

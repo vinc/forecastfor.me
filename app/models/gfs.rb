@@ -25,7 +25,7 @@ class GFS
   end
 
   def path
-    "/runs/#{@yyyymmdd}"
+    "/runs/#{@yyyymmdd}#{@cc}"
   end
 
   def time
