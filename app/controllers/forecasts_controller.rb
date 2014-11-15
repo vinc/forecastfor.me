@@ -3,10 +3,15 @@ class ForecastsController < ApplicationController
     params[:run_id] ? GFS.new(params[:run_id]) : GFS.last
   end
 
-  expose(:forecasts) do
-    longitude = Float(params[:longitude] || '2.37')
-    latitude = Float(params[:latitude] || '48.87')
+  expose(:longitude) do
+    params[:longitude].try(:to_f) || request.location.longitude
+  end
 
+  expose(:latitude) do
+    params[:latitude].try(:to_f) || request.location.latitude
+  end
+
+  expose(:forecasts) do
     (3..24).step(3).map do |id|
       forecast = Forecast.new(gfs, id)
       forecast.set_location(longitude: longitude, latitude: latitude)
