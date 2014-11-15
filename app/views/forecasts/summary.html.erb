@@ -12,7 +12,7 @@
   <% end %>
   <% if forecast_summary[:precipitations] > 1.0 %>
     with
-    <%= forecast_summary[:precipitations] %>
+    <%= number_with_precision(forecast_summary[:precipitations], precision: 1) %>
     <%= forecast_summary[:precipitations_unit] %>
     of rain
   <% end %>
