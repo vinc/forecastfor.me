@@ -9,6 +9,10 @@ class Forecast
     @memoized_reads = {}
   end
 
+  def time
+    @gfs.time + @hour.hours
+  end
+
   def precipitations
     (self.read(:prate) * 3.hours).round(1)
   end
@@ -29,7 +33,7 @@ class Forecast
 
   def as_json(options = {})
     {
-      time: @gfs.time + @hour.hours,
+      time: self.time,
       longitude: @longitude,
       latitude: @latitude,
       precipitations: self.precipitations,

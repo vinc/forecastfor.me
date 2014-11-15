@@ -20,4 +20,5 @@
 # available at http://guides.rubyonrails.org/i18n.html.
 
 en:
-  hello: "Hello world"
+  bulletin_temperature: "Temperature from %{min_value} %{unit} at %{min_time} to %{max_value} %{unit} at %{max_time}."
+  bulletin_wind: "Wind from %{min_value} %{unit} at %{min_time} to %{max_value} %{unit} at %{max_time}."

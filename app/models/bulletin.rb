@@ -15,6 +15,52 @@ class Bulletin
     end
   end
 
+  def weather
+    cloud_cover = @forecasts.map(&:cloud_cover).sum / @forecasts.size
+
+    weather =
+      if cloud_cover > 75
+        'Cloudy'
+      elsif cloud_cover > 50
+        'Mostly cloudy'
+      elsif cloud_cover > 10
+        'Partly cloudy'
+      else
+        'Clear'
+      end
+
+    precipitations = @forecasts.map(&:precipitations).sum
+    unit = 'mm'
+
+    if precipitations > 1
+      "#{weather} with #{'%.1f' % precipitations} #{unit} of rain."
+    else
+      "#{weather}."
+    end
+  end
+
+  def temperature
+    forecasts = @forecasts.sort_by { |forecast| forecast.temperature }
+    I18n.t('bulletin_temperature',
+      unit: '°C',
+      min_value: forecasts.first.temperature,
+      min_time: forecasts.first.time.strftime('%H%M'),
+      max_value: forecasts.last.temperature,
+      max_time: forecasts.last.time.strftime('%H%M')
+    )
+  end
+
+  def wind
+    forecasts = @forecasts.sort_by { |forecast| forecast.wind }
+    I18n.t('bulletin_wind',
+      unit: 'm/s',
+      min_value: forecasts.first.wind,
+      min_time: forecasts.first.time.strftime('%H%M'),
+      max_value: forecasts.last.wind,
+      max_time: forecasts.last.time.strftime('%H%M')
+    )
+  end
+
   def as_json(options = {})
     {
       date: @gfs.time.to_date,
