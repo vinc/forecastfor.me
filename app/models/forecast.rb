@@ -1,33 +1,30 @@
 class Forecast
   attr_accessor :longitude, :latitude
 
-  def initialize(gfs, hour)
+  def initialize(gfs:, hour:, longitude:, latitude:)
     @gfs = gfs
     @hour = hour
-    @memoized_reads = {}
-  end
- 
-  def set_location(longitude:, latitude:)
     @longitude = longitude
     @latitude = latitude
+    @memoized_reads = {}
   end
 
   def precipitations
-    (self.read('PRATE') * 3.hours).round(1)
+    (self.read(:prate) * 3.hours).round(1)
   end
 
   def temperature
-    (self.read('TMP') - 273.15).round
+    (self.read(:tmp) - 273.15).round
   end
 
   def wind
-    u = self.read('UGRD')
-    v = self.read('VGRD')
+    u = self.read(:ugrd)
+    v = self.read(:vgrd)
     Math.sqrt(u ** 2 + v ** 2).round
   end
 
   def cloud_cover
-    self.read('TCDC').round
+    self.read(:tcdc).round
   end
 
   def as_json(options = {})
@@ -48,10 +45,10 @@ class Forecast
 
   protected
 
-  def read(name)
-    @memoized_reads[name] ||= @gfs.record(
-      name: name,
-      forecast: @hour,
+  def read(field)
+    @memoized_reads[field] ||= @gfs.read(
+      field,
+      hour: @hour,
       longitude: @longitude,
       latitude: @latitude
     )

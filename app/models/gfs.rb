@@ -1,13 +1,13 @@
 class GFS
   SERVER = 'http://www.ftp.ncep.noaa.gov/data/nccf/com/gfs/prod'
-  RECORDS = [
-    'PRES:surface',
-    'PRATE:surface',
-    'TMP:2 m above ground',
-    'UGRD:10 m above ground',
-    'VGRD:10 m above ground',
-    'TCDC:entire atmosphere'
-  ]
+  RECORDS = {
+    prate: 'PRATE:surface',
+    pres:  'PRES:surface',
+    tmp:   'TMP:2 m above ground',
+    ugrd:  'UGRD:10 m above ground',
+    vgrd:  'VGRD:10 m above ground',
+    tcdc:  'TCDC:entire atmosphere'
+  }
 
   def self.all
     Dir.foreach(Rails.root.join('tmp', 'gfs')).
@@ -32,12 +32,12 @@ class GFS
     Time.parse("#{@yyyymmdd}#{@cc} +0000")
   end
 
-  def record(name:, forecast:, latitude:, longitude:)
-    hh = '%02d' % forecast
-    filename = "gfs.t#{@cc}z.pgrb2f#{hh}"
+  def read(field, hour: 3, latitude:, longitude:)
+    filename = "gfs.t#{@cc}z.pgrb2f#{'%02d' % hour}"
+    record = GFS::RECORDS[field]
 
     Dir.chdir(Rails.root.join('tmp', 'gfs', @yyyymmdd)) do
-      out = `wgrib2 #{filename} -s -lon #{longitude} #{latitude} -match '#{name}'`
+      out = `wgrib2 #{filename} -lon #{longitude} #{latitude} -match '#{record}'`
       lines = out.split("\n")
       fields = lines.first.split(':')
       params = Hash[*fields.last.split(',').map { |s| s.split('=') }.flatten]
@@ -51,8 +51,7 @@ class GFS
     FileUtils.mkpath(Rails.root.join('tmp', 'gfs', @yyyymmdd))
     Dir.chdir(Rails.root.join('tmp', 'gfs', @yyyymmdd)) do
       (3..24).step(3).map do |forecast|
-        hh = '%02d' % forecast
-        filename = "gfs.t#{@cc}z.pgrb2f#{hh}"
+        filename = "gfs.t#{@cc}z.pgrb2f#{'%02d' % hour}"
         url = "#{GFS::SERVER}/gfs.#{@yyyymmdd}#{@cc}/#{filename}"
 
         Rails.logger.info("Downloading '#{url}.idx' ...")
@@ -60,7 +59,7 @@ class GFS
         lines = IO.readlines("#{filename}.idx")
         n = lines.count
         ranges = lines.each_index.reduce([]) do |r, i|
-          if GFS::RECORDS.any? { |record| lines[i].include?(record) }
+          if GFS::RECORDS.values.any? { |record| lines[i].include?(record) }
             first = lines[i].split(':')[1].to_i
             last = ''
 
@@ -75,6 +74,7 @@ class GFS
             r
           end
         end
+        system("rm #{filename}.idx")
 
         Rails.logger.info("Downloading '#{url}' ...")
         system("#{curl} -r #{ranges.join(',')} #{url}")

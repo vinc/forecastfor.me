@@ -12,10 +12,13 @@ class ForecastsController < ApplicationController
   end
 
   expose(:forecasts) do
-    (3..24).step(3).map do |id|
-      forecast = Forecast.new(gfs, id)
-      forecast.set_location(longitude: longitude, latitude: latitude)
-      forecast
+    (3..24).step(3).map do |hour|
+      Forecast.new(
+        gfs: gfs,
+        hour: hour,
+        longitude: longitude,
+        latitude: latitude
+      )
     end
   end
 
