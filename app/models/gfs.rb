@@ -2,7 +2,6 @@ class GFS
   SERVER = 'http://www.ftp.ncep.noaa.gov/data/nccf/com/gfs/prod'
   RECORDS = {
     prate: 'PRATE:surface',
-    pres:  'PRES:surface',
     tmp:   'TMP:2 m above ground',
     ugrd:  'UGRD:10 m above ground',
     vgrd:  'VGRD:10 m above ground',
