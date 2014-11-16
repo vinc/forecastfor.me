@@ -80,4 +80,8 @@ class GFS
       end
     end
   end
+
+  def bulletin(longitude:, latitude:)
+    Bulletin.new(gfs: self, longitude: longitude, latitude: latitude)
+  end
 end

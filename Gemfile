@@ -37,6 +37,9 @@ gem 'spring',        group: :development
 
 gem 'decent_exposure'
 gem 'geocoder'
+gem 'twitter'
+gem 'chronic'
+gem 'omniauth-twitter'
 
 group :development, :test do
   gem 'pry-rails'
