@@ -15,6 +15,11 @@ class Bulletin
     end
   end
 
+  def location
+    address = Geocoder.search([@latitude, @longitude]).first
+    %w(city country).map { |c| address.send(c) }.join(', ')
+  end
+
   def weather
     cloud_cover = @forecasts.map(&:cloud_cover).sum / @forecasts.size
 

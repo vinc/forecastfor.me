@@ -49,7 +49,7 @@ class GFS
     curl = 'curl -O -f -s -S'
     FileUtils.mkpath(Rails.root.join('tmp', 'gfs', @yyyymmdd))
     Dir.chdir(Rails.root.join('tmp', 'gfs', @yyyymmdd)) do
-      (3..24).step(3).map do |forecast|
+      (3..24).step(3).map do |hour|
         filename = "gfs.t#{@cc}z.pgrb2f#{'%02d' % hour}"
         url = "#{GFS::SERVER}/gfs.#{@yyyymmdd}#{@cc}/#{filename}"
 
