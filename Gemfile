@@ -40,6 +40,8 @@ gem 'geocoder'
 gem 'twitter'
 gem 'chronic'
 gem 'omniauth-twitter'
+gem 'sidekiq'
+gem 'sidetiq'
 
 group :development, :test do
   gem 'pry-rails'
