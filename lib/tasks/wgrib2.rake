@@ -7,7 +7,7 @@ namespace :wgrib2 do
         sh 'tar -xzvf wgrib2.tgz'
         Dir.chdir('grib2') do
           sh 'CC=gcc FC=gfortran make'
-          mv 'grib2', Rails.root.join('bin')
+          mv 'wgrib2/wgrib2', Rails.root.join('bin')
         end
       end
     end
