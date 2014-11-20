@@ -32,11 +32,12 @@ class GFS
   end
 
   def read(field, hour: 3, latitude:, longitude:)
+    wgrib2 = Rails.root.join('bin', 'wgrib2')
     filename = "gfs.t#{@cc}z.pgrb2f#{'%02d' % hour}"
     record = GFS::RECORDS[field]
 
     Dir.chdir(Rails.root.join('tmp', 'gfs', @yyyymmdd)) do
-      out = `wgrib2 #{filename} -lon #{longitude} #{latitude} -match '#{record}'`
+      out = `#{wgrib2} #{filename} -lon #{longitude} #{latitude} -match '#{record}'`
       lines = out.split("\n")
       fields = lines.first.split(':')
       params = Hash[*fields.last.split(',').map { |s| s.split('=') }.flatten]
