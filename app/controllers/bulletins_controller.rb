@@ -19,6 +19,13 @@ class BulletinsController < ApplicationController
   end
 
   def show
-    respond_with(bulletin)
+    str = date.in_time_zone.to_s
+    key = [str, longitude, latitude].join(':')
+    if Redis.current.exists(key)
+      respond_with(bulletin)
+    else
+      BulletinWorker.perform_async(str, longitude, latitude)
+      render(template: 'bulletins/busy', status: :accepted)
+    end
   end
 end
