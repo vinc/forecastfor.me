@@ -58,17 +58,17 @@ class GFS
       filename = "gfs.t#{@cc}z.pgrb2f#{'%02d' % hour}"
       record = GFS::RECORDS[field]
 
-      Dir.chdir(Rails.root.join('tmp', 'gfs', @yyyymmdd + @cc)) do |path|
-        raise "'#{path}/#{filename}' not found" unless File.exists?(filename)
-        out = `#{wgrib2} #{filename} -lon #{longitude} #{latitude} -match '#{record}'`
-        lines = out.split("\n")
-        fields = lines.first.split(':')
-        params = Hash[*fields.last.split(',').map { |s| s.split('=') }.flatten]
+      path = Rails.root.join('tmp', 'gfs', @yyyymmdd + @cc, filename)
+      raise "'#{path}' not found" unless File.exists?(path)
 
-        ttl = 1.hour
-        val = params['val']
-        Redis.current.setex(key, ttl, val)
-      end
+      out = `#{wgrib2} #{path} -lon #{longitude} #{latitude} -match '#{record}'`
+      lines = out.split("\n")
+      fields = lines.first.split(':')
+      params = Hash[*fields.last.split(',').map { |s| s.split('=') }.flatten]
+
+      ttl = 1.hour
+      val = params['val']
+      Redis.current.setex(key, ttl, val)
     end
     Redis.current.get(key).to_f
   end
