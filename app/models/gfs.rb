@@ -55,10 +55,11 @@ class GFS
     key = [@yyyymmdd + @cc, field, hour, latitude, longitude].join(':')
     unless Redis.current.exists(key)
       wgrib2 = Rails.root.join('bin', 'wgrib2')
-      filename = "gfs.t#{@cc}z.pgrb2f#{'%02d' % hour}"
       record = GFS::RECORDS[field]
 
-      path = Rails.root.join('tmp', 'gfs', @yyyymmdd + @cc, filename)
+      filename = "gfs.t#{@cc}z.pgrb2f#{'%02d' % hour}"
+      pathname = Rails.root.join('tmp', 'gfs', @yyyymmdd + @cc)
+      path = Rails.root.join(pathname, filename)
       raise "'#{path}' not found" unless File.exists?(path)
 
       out = `#{wgrib2} #{path} -lon #{longitude} #{latitude} -match '#{record}'`
@@ -74,38 +75,41 @@ class GFS
   end
 
   def download!
-    curl = 'curl -O -f -s -S'
-    FileUtils.mkpath(Rails.root.join('tmp', 'gfs', @yyyymmdd + @cc))
-    Dir.chdir(Rails.root.join('tmp', 'gfs', @yyyymmdd + @cc)) do
-      GFS::FORECAST_HOURS.map do |hour|
-        filename = "gfs.t#{@cc}z.pgrb2f#{'%02d' % hour}"
-        url = "#{GFS::SERVER}/gfs.#{@yyyymmdd}#{@cc}/#{filename}"
+    curl = 'curl -f -s -S'
 
-        Rails.logger.info("Downloading '#{url}.idx' ...")
-        break unless system("#{curl} #{url}.idx")
-        lines = IO.readlines("#{filename}.idx")
-        n = lines.count
-        ranges = lines.each_index.reduce([]) do |r, i|
-          if GFS::RECORDS.values.any? { |record| lines[i].include?(record) }
-            first = lines[i].split(':')[1].to_i
-            last = ''
+    pathname = Rails.root.join('tmp', 'gfs', @yyyymmdd + @cc)
+    FileUtils.mkpath(pathname)
 
-            j = i
-            while (j += 1) < n
-              last = lines[j].split(':')[1].to_i - 1
-              break if last != first - 1
-            end
+    GFS::FORECAST_HOURS.map do |hour|
+      filename = "gfs.t#{@cc}z.pgrb2f#{'%02d' % hour}"
+      url = "#{GFS::SERVER}/gfs.#{@yyyymmdd}#{@cc}/#{filename}"
+      path = Rails.root.join(pathname, filename)
 
-            r << "#{first}-#{last}" # cURL syntax for a range
-          else
-            r
+      Rails.logger.info("Downloading '#{url}.idx' ...")
+      break unless system("#{curl} -o #{path}.idx #{url}.idx")
+
+      lines = IO.readlines("#{path}.idx")
+      n = lines.count
+      ranges = lines.each_index.reduce([]) do |r, i|
+        if GFS::RECORDS.values.any? { |record| lines[i].include?(record) }
+          first = lines[i].split(':')[1].to_i
+          last = ''
+
+          j = i
+          while (j += 1) < n
+            last = lines[j].split(':')[1].to_i - 1
+            break if last != first - 1
           end
-        end
-        system("rm #{filename}.idx")
 
-        Rails.logger.info("Downloading '#{url}' ...")
-        system("#{curl} -r #{ranges.join(',')} #{url}")
+          r << "#{first}-#{last}" # cURL syntax for a range
+        else
+          r
+        end
       end
+      system("rm #{path}.idx")
+
+      Rails.logger.info("Downloading '#{url}' ...")
+      system("#{curl} -r #{ranges.join(',')} -o #{path} #{url}")
     end
   end
 
