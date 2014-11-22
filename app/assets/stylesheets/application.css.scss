@@ -15,11 +15,38 @@
  */
 
 @import url(http://fonts.googleapis.com/css?family=Bitter:700|Open+Sans:400,700);
+@import url(http://css-spinners.com/css/spinner/throbber.css);
 
+html {
+  height: 100%;
+}
 body {
-  color: #333;
+  color: #444;
   font-family: "Open Sans", sans-serif;
+  height: 100%;
+  margin: 0;
+}
+.container {
+  display: flex;
+  align-content: center;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  flex-flow: column;
 }
 h1, h2 {
+  color: #666;
   font-family: "Bitter", serif;
+  font-size: 3em;
+  margin: 0;
+  padding: 0;
+}
+h2 {
+  font-size: 2em;
+}
+article {
+  max-width: 30em;
+  header {
+    margin: 3em 0;
+  }
 }

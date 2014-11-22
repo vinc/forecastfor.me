@@ -1,7 +1,14 @@
 <% content_for(:title, "Forecast for #{bulletin.location}") %>
-<h1><%= bulletin.location %></h1>
-<h2><%= bulletin.date.strftime('%A, %B %d') %></h2>
 
-<p class="weather"><%= bulletin.weather %></p>
-<p class="temperature"><%= bulletin.temperature %></p>
-<p class="wind"><%= bulletin.wind %></p>
+<article>
+  <header>
+    <h1><%= bulletin.location %></h1>
+    <h2><%= bulletin.date.strftime('%A') %></h2>
+  </header>
+
+  <p>
+    <span class="weather"><%= bulletin.weather %></span>
+    <span class="temperature"><%= bulletin.temperature %></span>
+    <span class="wind"><%= bulletin.wind %></span>
+  </p>
+</article>
