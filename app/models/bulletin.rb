@@ -1,18 +1,41 @@
 class Bulletin
-  attr_accessor :longitude, :latitude
+  attr_accessor :date, :longitude, :latitude, :forecasts
 
-  def initialize(gfs:, longitude:, latitude:)
-    @gfs = gfs
+  # TODO: move method to GFS class
+  # There is a GFS run every 6 hours starting at midnight and it takes
+  # approximately 3 to 5 hours before a run is available to download.
+  def self.run_time(time)
+    time = [time, Time.now].min.utc
+
+    midnight = time.at_beginning_of_day
+
+    hours_since_midnight = ((time - midnight) / 3600).round
+    hours_to_wait_for_gfs = 5
+    hours = hours_since_midnight - hours_to_wait_for_gfs
+
+    midnight + 6 * (hours / 6).hours
+  end
+
+  # TODO: move method to Forecast class
+  # A GFS run contains one forecast for every 3 hours.
+  def self.forecast_hours(time)
+    3 * (((time - self.run_time(time)) / 3600).round / 3)
+  end
+
+  def initialize(date = Date.today, longitude:, latitude:)
+    @date = date
     @longitude = longitude
     @latitude = latitude
-    @forecasts = (3..24).step(3).map do |hour|
-      Forecast.new(
-        gfs: gfs,
-        hour: hour,
-        longitude: longitude,
-        latitude: latitude
-      )
-    end
+
+    @forecasts = 24.times.map do |i|
+      t = date.to_time.utc + i.hours
+
+      time = Bulletin.run_time(t)
+      hour = Bulletin.forecast_hours(t)
+
+      gfs = GFS.find_or_create(time.strftime('%Y%m%d%H'))
+      gfs.forecast(hour: hour, longitude: longitude, latitude: latitude)
+    end.uniq # FIXME: extrapolate for every hour
   end
 
   def location
@@ -37,7 +60,7 @@ class Bulletin
     precipitations = @forecasts.map(&:precipitations).sum
     unit = 'mm'
 
-    if precipitations > 1
+    if precipitations > 0.1
       "#{weather} with #{'%.1f' % precipitations} #{unit} of rain."
     else
       "#{weather}."
@@ -68,10 +91,10 @@ class Bulletin
 
   def as_json(options = {})
     {
-      date: @gfs.time.to_date,
+      date: @date,
       longitude: @forecasts.first.longitude,
       latitude: @forecasts.first.latitude,
-      precipitations: @forecasts.map(&:precipitations).sum,
+      precipitations: @forecasts.map(&:precipitations).sum.round(1),
       precipitations_unit: 'mm',
       temperature_max: @forecasts.map(&:temperature).max,
       temperature_min: @forecasts.map(&:temperature).min,

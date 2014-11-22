@@ -9,6 +9,16 @@ class Forecast
     @memoized_reads = {}
   end
 
+  def hash
+    [time, longitude, latitude].hash
+  end
+
+  def eql?(other)
+    self.hash == other.hash
+  end
+
+  alias == eql?
+
   def time
     @gfs.time + @hour.hours
   end

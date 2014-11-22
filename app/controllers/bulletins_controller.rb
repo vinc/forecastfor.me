@@ -1,8 +1,4 @@
 class BulletinsController < ApplicationController
-  expose(:gfs) do
-    params[:run_id] ? GFS.new(params[:run_id]) : GFS.last
-  end
-
   expose(:longitude) do
     params[:longitude].try(:to_f) || request.location.longitude
   end
@@ -11,12 +7,12 @@ class BulletinsController < ApplicationController
     params[:latitude].try(:to_f) || request.location.latitude
   end
 
+  expose(:date) do
+    Chronic.parse(params[:date]).try(:to_date) || Date.today
+  end
+
   expose(:bulletin) do
-    Bulletin.new(
-      gfs: gfs,
-      longitude: longitude,
-      latitude: latitude
-    )
+    Bulletin.new(date, longitude: longitude, latitude: latitude)
   end
 
   def show

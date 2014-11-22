@@ -7,15 +7,35 @@ class GFS
     vgrd:  'VGRD:10 m above ground',
     tcdc:  'TCDC:entire atmosphere'
   }
+  FORECAST_HOURS = (3..54).step(3)
 
   def self.all
     Dir.foreach(Rails.root.join('tmp', 'gfs')).
       select { |dir| /\d{8}/ =~ dir }.
-      map { |dir| GFS.new("#{dir}00") }
+      sort_by { |dir| dir.to_i }.
+      map { |dir| GFS.new(dir) }
   end
 
   def self.last
     self.all.last
+  end
+
+  def self.find(yyyymmddcc)
+    if Dir.exist?(Rails.root.join('tmp', 'gfs', yyyymmddcc))
+      self.new(yyyymmddcc)
+    else
+      nil
+    end
+  end
+
+  def self.create(yyyymmddcc = "#{Time.now.strftime('%Y%m%d')}00")
+    gfs = self.new(yyyymmddcc)
+    gfs.download!
+    gfs
+  end
+
+  def self.find_or_create(yyyymmddcc)
+    self.find(yyyymmddcc) || self.create(yyyymmddcc)
   end
 
   def initialize(yyyymmddcc = "#{Time.now.strftime('%Y%m%d')}00")
@@ -36,7 +56,8 @@ class GFS
     filename = "gfs.t#{@cc}z.pgrb2f#{'%02d' % hour}"
     record = GFS::RECORDS[field]
 
-    Dir.chdir(Rails.root.join('tmp', 'gfs', @yyyymmdd)) do
+    Dir.chdir(Rails.root.join('tmp', 'gfs', @yyyymmdd + @cc)) do |path|
+      raise "'#{path}/#{filename}' not found" unless File.exists?(filename)
       out = `#{wgrib2} #{filename} -lon #{longitude} #{latitude} -match '#{record}'`
       lines = out.split("\n")
       fields = lines.first.split(':')
@@ -48,9 +69,9 @@ class GFS
 
   def download!
     curl = 'curl -O -f -s -S'
-    FileUtils.mkpath(Rails.root.join('tmp', 'gfs', @yyyymmdd))
-    Dir.chdir(Rails.root.join('tmp', 'gfs', @yyyymmdd)) do
-      (3..24).step(3).map do |hour|
+    FileUtils.mkpath(Rails.root.join('tmp', 'gfs', @yyyymmdd + @cc))
+    Dir.chdir(Rails.root.join('tmp', 'gfs', @yyyymmdd + @cc)) do
+      GFS::FORECAST_HOURS.map do |hour|
         filename = "gfs.t#{@cc}z.pgrb2f#{'%02d' % hour}"
         url = "#{GFS::SERVER}/gfs.#{@yyyymmdd}#{@cc}/#{filename}"
 
@@ -82,7 +103,18 @@ class GFS
     end
   end
 
-  def bulletin(longitude:, latitude:)
-    Bulletin.new(gfs: self, longitude: longitude, latitude: latitude)
+  def forecast(hour:, longitude:, latitude:)
+    Forecast.new(
+      gfs: self,
+      hour: hour,
+      longitude: longitude,
+      latitude: latitude
+    )
+  end
+
+  def forecasts(longitude:, latitude:)
+    GFS::FORECAST_HOURS.map do |hour|
+      forecast(hour: hour, longitude: longitude, latitude: latitude)
+    end
   end
 end

@@ -1,14 +1,15 @@
 Rails.application.routes.draw do
   get 'sessions/create'
 
-  resources :runs do
+  resources :runs, only: [:index, :show] do
     collection do
       get 'latest', to: redirect { GFS.last.path }
     end
 
-    resources :forecasts
-    resource :bulletin
+    resources :forecasts, only: [:index, :show]
   end
+
+  resource :bulletin, only: [:show]
 
   get '/auth/:provider/callback' => 'sessions#create'
 

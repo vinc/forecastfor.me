@@ -1,6 +1,6 @@
 class ForecastsController < ApplicationController
   expose(:gfs) do
-    params[:run_id] ? GFS.new(params[:run_id]) : GFS.last
+    params[:run_id] ? GFS.find(params[:run_id]) : GFS.last
   end
 
   expose(:longitude) do
@@ -12,18 +12,12 @@ class ForecastsController < ApplicationController
   end
 
   expose(:forecasts) do
-    (3..24).step(3).map do |hour|
-      Forecast.new(
-        gfs: gfs,
-        hour: hour,
-        longitude: longitude,
-        latitude: latitude
-      )
-    end
+    gfs.forecasts(longitude: longitude, latitude: latitude)
   end
 
   expose(:forecast) do
-    forecasts[Integer(params[:id] || '0') / 3]
+    hour = Integer(params[:id] || '0')
+    gfs.forecast(hour: hour, longitude: longitude, latitude: latitude)
   end
 
   def index
