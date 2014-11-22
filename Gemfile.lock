@@ -193,6 +193,7 @@ DEPENDENCIES
   omniauth-twitter
   pry-rails
   rails (= 4.1.7)
+  redis
   sass-rails (~> 4.0.3)
   sdoc (~> 0.4.0)
   sidekiq

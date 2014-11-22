@@ -1,4 +1,4 @@
 Geocoder.configure(
-  cache: {},
+  cache: Redis.current,
   timeout: 10
 )

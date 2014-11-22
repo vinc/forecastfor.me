@@ -43,6 +43,7 @@ gem 'timezone'
 gem 'omniauth-twitter'
 gem 'sidekiq'
 gem 'sidetiq'
+gem 'redis'
 
 group :development, :test do
   gem 'pry-rails'

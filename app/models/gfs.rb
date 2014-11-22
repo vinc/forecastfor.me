@@ -52,19 +52,25 @@ class GFS
   end
 
   def read(field, hour: 3, latitude:, longitude:)
-    wgrib2 = Rails.root.join('bin', 'wgrib2')
-    filename = "gfs.t#{@cc}z.pgrb2f#{'%02d' % hour}"
-    record = GFS::RECORDS[field]
+    key = [@yyyymmdd + @cc, field, hour, latitude, longitude].join(':')
+    unless Redis.current.exists(key)
+      wgrib2 = Rails.root.join('bin', 'wgrib2')
+      filename = "gfs.t#{@cc}z.pgrb2f#{'%02d' % hour}"
+      record = GFS::RECORDS[field]
 
-    Dir.chdir(Rails.root.join('tmp', 'gfs', @yyyymmdd + @cc)) do |path|
-      raise "'#{path}/#{filename}' not found" unless File.exists?(filename)
-      out = `#{wgrib2} #{filename} -lon #{longitude} #{latitude} -match '#{record}'`
-      lines = out.split("\n")
-      fields = lines.first.split(':')
-      params = Hash[*fields.last.split(',').map { |s| s.split('=') }.flatten]
-      
-      params['val'].to_f
+      Dir.chdir(Rails.root.join('tmp', 'gfs', @yyyymmdd + @cc)) do |path|
+        raise "'#{path}/#{filename}' not found" unless File.exists?(filename)
+        out = `#{wgrib2} #{filename} -lon #{longitude} #{latitude} -match '#{record}'`
+        lines = out.split("\n")
+        fields = lines.first.split(':')
+        params = Hash[*fields.last.split(',').map { |s| s.split('=') }.flatten]
+
+        ttl = 1.hour
+        val = params['val']
+        Redis.current.setex(key, ttl, val)
+      end
     end
+    Redis.current.get(key).to_f
   end
 
   def download!
