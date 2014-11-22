@@ -72,9 +72,9 @@ class Bulletin
     I18n.t('bulletin_temperature',
       unit: '°C',
       min_value: forecasts.first.temperature,
-      min_time: forecasts.first.time.in_time_zone.strftime('%H%M'),
+      min_time: I18n.l(forecasts.first.time.in_time_zone, format: :shortest),
       max_value: forecasts.last.temperature,
-      max_time: forecasts.last.time.in_time_zone.strftime('%H%M')
+      max_time: I18n.l(forecasts.last.time.in_time_zone, format: :shortest)
     )
   end
 
@@ -83,9 +83,9 @@ class Bulletin
     I18n.t('bulletin_wind',
       unit: 'm/s',
       min_value: forecasts.first.wind,
-      min_time: forecasts.first.time.in_time_zone.strftime('%H%M'),
+      min_time: I18n.l(forecasts.first.time.in_time_zone, format: :shortest),
       max_value: forecasts.last.wind,
-      max_time: forecasts.last.time.in_time_zone.strftime('%H%M')
+      max_time: I18n.l(forecasts.last.time.in_time_zone, format: :shortest)
     )
   end
 
