@@ -1,3 +1,10 @@
+GIT
+  remote: git://github.com/brainopia/sidekiq-limit_fetch.git
+  revision: 8abc580a1d3f8743a1590cc3ea2765423308ddb5
+  specs:
+    sidekiq-limit_fetch (2.3.0)
+      sidekiq (>= 2.6.5, < 4.0)
+
 GEM
   remote: https://rubygems.org/
   specs:
@@ -197,6 +204,7 @@ DEPENDENCIES
   sass-rails (~> 4.0.3)
   sdoc (~> 0.4.0)
   sidekiq
+  sidekiq-limit_fetch!
   sidetiq
   spring
   timezone

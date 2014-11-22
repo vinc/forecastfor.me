@@ -42,6 +42,7 @@ gem 'chronic'
 gem 'timezone'
 gem 'omniauth-twitter'
 gem 'sidekiq'
+gem 'sidekiq-limit_fetch', github: 'brainopia/sidekiq-limit_fetch'
 gem 'sidetiq'
 gem 'redis'
 

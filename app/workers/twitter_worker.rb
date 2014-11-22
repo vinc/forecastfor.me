@@ -3,11 +3,12 @@ require 'sidekiq/api'
 class TwitterWorker
   include Sidekiq::Worker
   include Sidetiq::Schedulable
+  sidekiq_options queue: :twitter
 
   recurrence { minutely }
 
   def queued?
-    Sidekiq::Queue.new.any? do |job|
+    Sidekiq::Queue.new(:twitter).any? do |job|
       job.klass == 'TwitterWorker'
     end
   end

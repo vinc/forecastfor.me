@@ -1,0 +1,6 @@
+:concurrency: 10
+:queues:
+  - twitter
+  - default
+:limits:
+  twitter: 1
