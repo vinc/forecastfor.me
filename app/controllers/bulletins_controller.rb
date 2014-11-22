@@ -8,7 +8,10 @@ class BulletinsController < ApplicationController
   end
 
   expose(:date) do
-    Chronic.parse(params[:date]).try(:to_date) || Date.today
+    latlon = [latitude, longitude]
+    Time.zone = Timezone::Zone.new(latlon: latlon).zone
+    Chronic.time_class = Time.zone
+    Chronic.parse(params[:date]).try(:to_date) || Time.zone.today
   end
 
   expose(:bulletin) do

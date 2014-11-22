@@ -7,7 +7,7 @@ class GFS
     vgrd:  'VGRD:10 m above ground',
     tcdc:  'TCDC:entire atmosphere'
   }
-  FORECAST_HOURS = (3..54).step(3)
+  FORECAST_HOURS = (3..114).step(3)
 
   def self.all
     Dir.foreach(Rails.root.join('tmp', 'gfs')).

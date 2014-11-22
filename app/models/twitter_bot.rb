@@ -16,13 +16,15 @@ class TwitterBot
       if tweet.text =~ Regexp.new("@#{username}", Regexp::IGNORECASE)
         Rails.logger.info("Received tweet from @#{tweet.user.screen_name}: '#{tweet.text}'")
 
-        time = self.parse_time(tweet)
-        coordinates = self.parse_coordinates(tweet)
-        if time && coordinates
-          lat, lon = coordinates
-          bulletin = GFS.last.bulletin(longitude: lon, latitude: lat)
+        if latlon = self.parse_coordinates(tweet)
+          Time.zone = Timezone::Zone.new(latlon: latlon).zone
+          if time = self.parse_time(tweet, Time.zone)
+            date = time.to_date
+            lat, lon = latlon
+            bulletin = Bulletin.new(date, latitude: lat, longitude: lon)
 
-          self.tweet_bulletin(tweet, bulletin)
+            self.tweet_bulletin(tweet, bulletin)
+          end
         end
       end
     end
@@ -39,7 +41,8 @@ class TwitterBot
     Rails.logger.info("Sent tweet: '#{text}'")
   end
 
-  def parse_time(tweet)
+  def parse_time(tweet, tz)
+    Chronic.time_class = Time.zone
     Chronic.parse(tweet.text[/for (\S+( (?!in)\S+)*)/i, 1])
   end
 

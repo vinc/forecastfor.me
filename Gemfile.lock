@@ -158,6 +158,7 @@ GEM
     tilt (1.4.1)
     timers (4.0.1)
       hitimes
+    timezone (0.3.2)
     turbolinks (2.5.2)
       coffee-rails
     twitter (5.13.0)
@@ -197,6 +198,7 @@ DEPENDENCIES
   sidekiq
   sidetiq
   spring
+  timezone
   turbolinks
   twitter
   uglifier (>= 1.3.0)
