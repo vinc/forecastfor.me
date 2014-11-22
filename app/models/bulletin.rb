@@ -27,8 +27,8 @@ class Bulletin
     @longitude = longitude
     @latitude = latitude
 
-    @forecasts = 24.times.map do |i|
-      t = date.to_time.utc + i.hours
+    @forecasts = (1..24).map do |i|
+      t = date.at_beginning_of_day.utc + i.hours
 
       time = Bulletin.run_time(t)
       hour = Bulletin.forecast_hours(t)
@@ -72,9 +72,9 @@ class Bulletin
     I18n.t('bulletin_temperature',
       unit: '°C',
       min_value: forecasts.first.temperature,
-      min_time: forecasts.first.time.strftime('%H%M'),
+      min_time: forecasts.first.time.in_time_zone.strftime('%H%M'),
       max_value: forecasts.last.temperature,
-      max_time: forecasts.last.time.strftime('%H%M')
+      max_time: forecasts.last.time.in_time_zone.strftime('%H%M')
     )
   end
 
@@ -83,9 +83,9 @@ class Bulletin
     I18n.t('bulletin_wind',
       unit: 'm/s',
       min_value: forecasts.first.wind,
-      min_time: forecasts.first.time.strftime('%H%M'),
+      min_time: forecasts.first.time.in_time_zone.strftime('%H%M'),
       max_value: forecasts.last.wind,
-      max_time: forecasts.last.time.strftime('%H%M')
+      max_time: forecasts.last.time.in_time_zone.strftime('%H%M')
     )
   end
 
