@@ -45,6 +45,8 @@ gem 'sidekiq'
 gem 'sidekiq-limit_fetch', github: 'brainopia/sidekiq-limit_fetch'
 gem 'sidetiq'
 gem 'redis'
+gem 'bootstrap-sass'
+gem 'autoprefixer-rails'
 
 group :development, :test do
   gem 'pry-rails'

@@ -14,7 +14,11 @@
  *= require_self
  */
 
-@import url(http://fonts.googleapis.com/css?family=Bitter:700|Open+Sans:400,700);
+$grid-float-breakpoint: 0;
+
+@import "bootstrap-sprockets";
+@import "bootstrap";
+@import url(http://fonts.googleapis.com/css?family=Bitter:700|Open+Sans);
 @import url(http://css-spinners.com/css/spinner/throbber.css);
 
 html {
@@ -26,6 +30,7 @@ body {
   font-size: 20px;
   height: 100%;
   margin: 0;
+  padding-top: 50px;
 }
 .container {
   display: flex;
@@ -38,12 +43,12 @@ body {
 h1, h2 {
   color: #666;
   font-family: "Bitter", serif;
-  font-size: 3em;
+  font-size: 6vmax;
   margin: 0;
   padding: 0;
 }
 h2 {
-  font-size: 2em;
+  font-size: 4vmax;
 }
 p {
   margin: 0;
@@ -51,7 +56,21 @@ p {
 }
 article {
   max-width: 30em;
+  h2 {
+    margin-top: 2vh;
+  }
   > * + * {
-    margin-top: 3em;
+    margin-top: 10vh;
+  }
+}
+@media (max-width: $screen-sm-min) {
+  body {
+    font-size: 16px;
+  }
+  h1 {
+    font-size: 3em;
+  }
+  h2 {
+    font-size: 2em;
   }
 }
