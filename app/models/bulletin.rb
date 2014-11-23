@@ -48,20 +48,23 @@ class Bulletin
 
     weather =
       if cloud_cover > 75
-        'Cloudy'
+        I18n.t('bulletin_weather_75')
       elsif cloud_cover > 50
-        'Mostly cloudy'
+        I18n.t('bulletin_weather_50')
       elsif cloud_cover > 10
-        'Partly cloudy'
+        I18n.t('bulletin_weather_10')
       else
-        'Clear'
+        I18n.t('bulletin_weather_00')
       end
 
     precipitations = @forecasts.map(&:precipitations).sum
-    unit = 'mm'
 
     if precipitations > 0.1
-      "#{weather} with #{'%.1f' % precipitations} #{unit} of rain."
+      str = I18n.t('bulletin_precipitation',
+        unit: 'mm',
+        value: '%.1f' % precipitations
+      )
+      "#{weather} #{str}."
     else
       "#{weather}."
     end

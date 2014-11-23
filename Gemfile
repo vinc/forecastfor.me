@@ -47,6 +47,7 @@ gem 'sidetiq'
 gem 'redis'
 gem 'bootstrap-sass'
 gem 'autoprefixer-rails'
+gem 'rails-i18n'
 
 group :development, :test do
   gem 'pry-rails'

@@ -19,14 +19,14 @@
 # To learn more, please read the Rails Internationalization guide
 # available at http://guides.rubyonrails.org/i18n.html.
 
-en:
-  bulletin_weather_75: 'Cloudy'
-  bulletin_weather_50: 'Mostly cloudy'
-  bulletin_weather_10: 'Partly cloudy'
-  bulletin_weather_00: 'Clear'
-  bulletin_precipitation: "with %{value} %{unit} of rain"
-  bulletin_temperature: "Temperature from %{min_value} %{unit} at %{min_time} to %{max_value} %{unit} at %{max_time}."
-  bulletin_wind: "Wind from %{min_value} %{unit} at %{min_time} to %{max_value} %{unit} at %{max_time}."
+fr:
+  bulletin_weather_75: 'Nuageux'
+  bulletin_weather_50: 'Plutot nuageux'
+  bulletin_weather_10: 'Partiellement nuageux'
+  bulletin_weather_00: 'Degage'
+  bulletin_precipitation: "avec %{value} %{unit} de pluie"
+  bulletin_temperature: "Temperature allant de %{min_value} %{unit} a %{min_time} jusqu'a %{max_value} %{unit} a %{max_time}."
+  bulletin_wind: "Vent allant de %{min_value} %{unit} a %{min_time} jusqu'a %{max_value} %{unit} a %{max_time}."
   bulletin_tweet: "@%{user} %{weather} %{temperature} %{wind}"
   time:
     formats:

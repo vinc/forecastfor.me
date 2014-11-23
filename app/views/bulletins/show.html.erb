@@ -3,7 +3,7 @@
 <article>
   <header>
     <h1><%= bulletin.location %></h1>
-    <h2><%= bulletin.date.strftime('%A') %></h2>
+    <h2><%= l(bulletin.date, format: '%A').capitalize %></h2>
   </header>
 
   <p>
