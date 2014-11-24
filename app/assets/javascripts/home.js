@@ -19,12 +19,26 @@ function poll(path, callback) {
   });
 }
 
+function querystring(str) {
+  var strings = str.substring(1).split('&');
+  var params = {};
+  var i, n;
+
+  for (i = 0, n = strings.length; i < n; i++) {
+    var kv = strings[i].split('=');
+
+    params[kv[0]] = kv[1];
+  }
+  return params;
+}
+
 $(document).on('ready page:load', function() {
   if (window.location.pathname === '/') {
     console.log('waiting for geolocation');
 
     navigator.geolocation.getCurrentPosition(function(pos) {
       var params = {
+        date: querystring(window.location.search).date || 'today',
         latitude: pos.coords.latitude.toFixed(2),
         longitude: pos.coords.longitude.toFixed(2),
         locale: locale(),

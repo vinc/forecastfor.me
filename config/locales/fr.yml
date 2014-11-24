@@ -28,6 +28,10 @@ fr:
   bulletin_temperature: "Temperature allant de %{min_value} %{unit} a %{min_time} jusqu'a %{max_value} %{unit} a %{max_time}."
   bulletin_wind: "Vent allant de %{min_value} %{unit} a %{min_time} jusqu'a %{max_value} %{unit} a %{max_time}."
   bulletin_tweet: "@%{user} %{weather} %{temperature} %{wind}"
+  date:
+    date: 'date'
+    today: "aujourd'hui"
+    tomorrow: 'demain'
   time:
     formats:
       shortest: '%H:%M'
