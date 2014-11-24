@@ -21,7 +21,7 @@ class GFS
   end
 
   def self.find(yyyymmddcc)
-    if Dir.exist?(Rails.root.join('tmp', 'gfs', yyyymmddcc))
+    if File.exist?(Rails.root.join('tmp', 'gfs', yyyymmddcc, '.downloaded'))
       self.new(yyyymmddcc)
     else
       nil
@@ -111,6 +111,9 @@ class GFS
       Rails.logger.info("Downloading '#{url}' ...")
       system("#{curl} -r #{ranges.join(',')} -o #{path} #{url}")
     end
+
+    path = Rails.root.join(pathname, '.downloaded')
+    FileUtils.touch(path)
   end
 
   def forecast(hour:, longitude:, latitude:)
