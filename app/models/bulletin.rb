@@ -75,7 +75,7 @@ class Bulletin
   def temperature
     sorted_forecasts = forecasts.sort_by { |forecast| forecast.temperature }
     min = sorted_forecasts.first
-    max = sorted_forecasts.first
+    max = sorted_forecasts.last
     I18n.t('bulletin_temperature',
       unit: '°C',
       min_value: min.temperature,
@@ -88,7 +88,7 @@ class Bulletin
   def wind
     sorted_forecasts = forecasts.sort_by { |forecast| forecast.wind }
     min = sorted_forecasts.first
-    max = sorted_forecasts.first
+    max = sorted_forecasts.last
     I18n.t('bulletin_wind',
       unit: 'm/s',
       min_value: min.wind,
