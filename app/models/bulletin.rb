@@ -50,19 +50,19 @@ class Bulletin
 
     weather =
       if cloud_cover > 75
-        I18n.t('bulletin_weather_75')
+        I18n.t('bulletin.weather_75')
       elsif cloud_cover > 50
-        I18n.t('bulletin_weather_50')
+        I18n.t('bulletin.weather_50')
       elsif cloud_cover > 10
-        I18n.t('bulletin_weather_10')
+        I18n.t('bulletin.weather_10')
       else
-        I18n.t('bulletin_weather_00')
+        I18n.t('bulletin.weather_00')
       end
 
     precipitations = forecasts.map(&:precipitations).sum
 
     if precipitations > 0.1
-      str = I18n.t('bulletin_precipitation',
+      str = I18n.t('bulletin.precipitation',
         unit: 'mm',
         value: '%.1f' % precipitations
       )
@@ -76,7 +76,7 @@ class Bulletin
     sorted_forecasts = forecasts.sort_by { |forecast| forecast.temperature }
     min = sorted_forecasts.first
     max = sorted_forecasts.last
-    I18n.t('bulletin_temperature',
+    I18n.t('bulletin.temperature',
       unit: '°C',
       min_value: min.temperature,
       min_time: I18n.l(min.time.in_time_zone, format: :shortest),
@@ -89,7 +89,7 @@ class Bulletin
     sorted_forecasts = forecasts.sort_by { |forecast| forecast.wind }
     min = sorted_forecasts.first
     max = sorted_forecasts.last
-    I18n.t('bulletin_wind',
+    I18n.t('bulletin.wind',
       unit: 'm/s',
       min_value: min.wind,
       min_time: I18n.l(min.time.in_time_zone, format: :shortest),

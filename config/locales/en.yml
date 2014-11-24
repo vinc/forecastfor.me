@@ -20,14 +20,15 @@
 # available at http://guides.rubyonrails.org/i18n.html.
 
 en:
-  bulletin_weather_75: 'Cloudy'
-  bulletin_weather_50: 'Mostly cloudy'
-  bulletin_weather_10: 'Partly cloudy'
-  bulletin_weather_00: 'Clear'
-  bulletin_precipitation: "with %{value} %{unit} of rain"
-  bulletin_temperature: "Temperature from %{min_value} %{unit} at %{min_time} to %{max_value} %{unit} at %{max_time}."
-  bulletin_wind: "Wind from %{min_value} %{unit} at %{min_time} to %{max_value} %{unit} at %{max_time}."
-  bulletin_tweet: "@%{user} %{weather} %{temperature} %{wind}"
+  bulletin:
+    weather_75: 'Cloudy'
+    weather_50: 'Mostly cloudy'
+    weather_10: 'Partly cloudy'
+    weather_00: 'Clear'
+    precipitation: "with %{value} %{unit} of rain"
+    temperature: "Temperature from %{min_value} %{unit} at %{min_time} to %{max_value} %{unit} at %{max_time}."
+    wind: "Wind from %{min_value} %{unit} at %{min_time} to %{max_value} %{unit} at %{max_time}."
+    tweet: "@%{user} %{weather} %{temperature} %{wind}"
   date:
     date: 'date'
     today: 'today'
