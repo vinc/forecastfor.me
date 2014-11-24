@@ -3,7 +3,11 @@
 <article>
   <header>
     <h1><%= bulletin.location %></h1>
-    <h2><%= l(bulletin.date, format: '%A').capitalize %></h2>
+    <% if bulletin.date == Date.today %>
+      <h2><%= t('date.today').capitalize %></h2>
+    <% else %>
+      <h2><%= l(bulletin.date, format: '%A').capitalize %></h2>
+    <% end %>
   </header>
 
   <p>
