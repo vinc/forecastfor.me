@@ -1,5 +1,5 @@
 class Bulletin
-  attr_accessor :date, :longitude, :latitude, :forecasts
+  attr_accessor :date, :longitude, :latitude
 
   # TODO: move method to GFS class
   # There is a GFS run every 6 hours starting at midnight and it takes
@@ -26,8 +26,10 @@ class Bulletin
     @date = date
     @longitude = longitude
     @latitude = latitude
+  end
 
-    @forecasts = (1..24).map do |i|
+  def forecasts
+    @forecasts ||= (1..24).map do |i|
       t = date.at_beginning_of_day.utc + i.hours
 
       time = Bulletin.run_time(t)
@@ -44,7 +46,7 @@ class Bulletin
   end
 
   def weather
-    cloud_cover = @forecasts.map(&:cloud_cover).sum / @forecasts.size
+    cloud_cover = forecasts.map(&:cloud_cover).sum / forecasts.size
 
     weather =
       if cloud_cover > 75
@@ -57,7 +59,7 @@ class Bulletin
         I18n.t('bulletin_weather_00')
       end
 
-    precipitations = @forecasts.map(&:precipitations).sum
+    precipitations = forecasts.map(&:precipitations).sum
 
     if precipitations > 0.1
       str = I18n.t('bulletin_precipitation',
@@ -71,41 +73,45 @@ class Bulletin
   end
 
   def temperature
-    forecasts = @forecasts.sort_by { |forecast| forecast.temperature }
+    sorted_forecasts = forecasts.sort_by { |forecast| forecast.temperature }
+    min = sorted_forecasts.first
+    max = sorted_forecasts.first
     I18n.t('bulletin_temperature',
       unit: '°C',
-      min_value: forecasts.first.temperature,
-      min_time: I18n.l(forecasts.first.time.in_time_zone, format: :shortest),
-      max_value: forecasts.last.temperature,
-      max_time: I18n.l(forecasts.last.time.in_time_zone, format: :shortest)
+      min_value: min.temperature,
+      min_time: I18n.l(min.time.in_time_zone, format: :shortest),
+      max_value: max.temperature,
+      max_time: I18n.l(max.time.in_time_zone, format: :shortest)
     )
   end
 
   def wind
-    forecasts = @forecasts.sort_by { |forecast| forecast.wind }
+    sorted_forecasts = forecasts.sort_by { |forecast| forecast.wind }
+    min = sorted_forecasts.first
+    max = sorted_forecasts.first
     I18n.t('bulletin_wind',
       unit: 'm/s',
-      min_value: forecasts.first.wind,
-      min_time: I18n.l(forecasts.first.time.in_time_zone, format: :shortest),
-      max_value: forecasts.last.wind,
-      max_time: I18n.l(forecasts.last.time.in_time_zone, format: :shortest)
+      min_value: min.wind,
+      min_time: I18n.l(min.time.in_time_zone, format: :shortest),
+      max_value: max.wind,
+      max_time: I18n.l(max.time.in_time_zone, format: :shortest)
     )
   end
 
   def as_json(options = {})
     {
       date: @date,
-      longitude: @forecasts.first.longitude,
-      latitude: @forecasts.first.latitude,
-      precipitations: @forecasts.map(&:precipitations).sum.round(1),
+      longitude: forecasts.first.longitude,
+      latitude: forecasts.first.latitude,
+      precipitations: forecasts.map(&:precipitations).sum.round(1),
       precipitations_unit: 'mm',
-      temperature_max: @forecasts.map(&:temperature).max,
-      temperature_min: @forecasts.map(&:temperature).min,
+      temperature_max: forecasts.map(&:temperature).max,
+      temperature_min: forecasts.map(&:temperature).min,
       temperature_unit: '°C',
-      wind_max: @forecasts.map(&:wind).max,
-      wind_min: @forecasts.map(&:wind).min,
+      wind_max: forecasts.map(&:wind).max,
+      wind_min: forecasts.map(&:wind).min,
       wind_unit: 'm/s',
-      cloud_cover: @forecasts.map(&:cloud_cover).sum / @forecasts.size,
+      cloud_cover: forecasts.map(&:cloud_cover).sum / forecasts.size,
       cloud_cover_unit: '%'
     }
   end
