@@ -3,7 +3,7 @@ require 'sidekiq/api'
 class TwitterWorker
   include Sidekiq::Worker
   include Sidetiq::Schedulable
-  sidekiq_options queue: :twitter
+  sidekiq_options queue: :twitter, retry: false
 
   recurrence { minutely }
 
