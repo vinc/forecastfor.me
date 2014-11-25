@@ -15,6 +15,9 @@
  */
 
 $grid-float-breakpoint: 0;
+$font-size-base: 20px;
+$font-family-serif: "Bitter", serif;
+$font-family-sans-serif: "Open Sans", sans-serif;
 
 @import "bootstrap-sprockets";
 @import "bootstrap";
@@ -26,8 +29,6 @@ html {
 }
 body {
   color: #444;
-  font-family: "Open Sans", sans-serif;
-  font-size: 20px;
   height: 100%;
   margin: 0;
   padding-top: 50px;
@@ -73,4 +74,7 @@ article {
   h2 {
     font-size: 2em;
   }
+}
+.navbar-brand {
+  font-size: $font-size-base;
 }
