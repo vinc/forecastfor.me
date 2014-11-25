@@ -2,7 +2,7 @@ class GFSWorker
   include Sidekiq::Worker
   include Sidetiq::Schedulable
 
-  recurrence { hourly }
+  recurrence { hourly.minute_of_hour(0) }
 
   def perform
     last_run_time = Bulletin.run_time(Time.now)
