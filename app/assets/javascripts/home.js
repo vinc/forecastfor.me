@@ -49,6 +49,8 @@ $(document).on('ready page:load', function() {
     date: querystring(window.location.search).date || 'today',
   };
 
+  $('#settings form [name=city]').val(city());
+
   if (window.location.pathname === '/') {
     params.locale = locale();
     params.units = units();
@@ -79,6 +81,7 @@ $(document).on('ready page:load', function() {
       delete params.latitude;
       delete params.longitude;
     } else {
+      delete localStorage.city;
       delete params.city;
     }
     localStorage.locale = params.locale;
