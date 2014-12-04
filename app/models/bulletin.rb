@@ -37,7 +37,7 @@ class Bulletin
 
       gfs = GFS.find_or_create(time.strftime('%Y%m%d%H'))
       gfs.forecast(hour: hour, longitude: longitude, latitude: latitude)
-    end.uniq # FIXME: extrapolate for every hour
+    end
   end
 
   def location
