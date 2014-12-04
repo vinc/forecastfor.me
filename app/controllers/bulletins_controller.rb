@@ -1,3 +1,5 @@
+require 'descriptive_statistics'
+
 class BulletinsController < ApplicationController
   expose(:longitude) do
     params[:longitude].try(:to_f) || request.location.longitude
