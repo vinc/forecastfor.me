@@ -62,6 +62,7 @@ GEM
     connection_pool (2.1.0)
     debug_inspector (0.0.2)
     decent_exposure (2.3.2)
+    descriptive_statistics (2.4.0)
     equalizer (0.0.9)
     erubis (2.7.0)
     execjs (2.2.2)
@@ -203,6 +204,7 @@ DEPENDENCIES
   chronic
   coffee-rails (~> 4.0.0)
   decent_exposure
+  descriptive_statistics
   geocoder
   jbuilder (~> 2.0)
   jquery-rails

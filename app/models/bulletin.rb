@@ -98,20 +98,24 @@ class Bulletin
     )
   end
 
+  def statistics(quantity)
+    forecasts.map(&quantity).
+      descriptive_statistics.
+      slice(:min, :max, :q1, :q2, :q3)
+  end
+
   def as_json(options = {})
     {
       date: @date,
       longitude: forecasts.first.longitude,
       latitude: forecasts.first.latitude,
-      precipitations: forecasts.map(&:precipitations).sum.round(1),
+      precipitations_stats: statistics(:precipitations),
       precipitations_unit: 'mm',
-      temperature_max: forecasts.map(&:temperature).max,
-      temperature_min: forecasts.map(&:temperature).min,
+      temperature_stats: statistics(:temperature),
       temperature_unit: '°C',
-      wind_max: forecasts.map(&:wind).max,
-      wind_min: forecasts.map(&:wind).min,
+      wind_stats: statistics(:wind),
       wind_unit: 'm/s',
-      cloud_cover: forecasts.map(&:cloud_cover).sum / forecasts.size,
+      cloud_cover_stats: statistics(:cloud_cover),
       cloud_cover_unit: '%'
     }
   end

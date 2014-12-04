@@ -48,6 +48,7 @@ gem 'redis'
 gem 'bootstrap-sass'
 gem 'autoprefixer-rails'
 gem 'rails-i18n'
+gem 'descriptive_statistics', require: 'descriptive_statistics/safe'
 
 group :development, :test do
   gem 'pry-rails'
