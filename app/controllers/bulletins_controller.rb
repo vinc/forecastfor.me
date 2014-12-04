@@ -1,12 +1,16 @@
 require 'descriptive_statistics'
 
 class BulletinsController < ApplicationController
+  expose(:city) do
+    Geocoder.search(params[:city]).first if params.include?(:city)
+  end
+
   expose(:longitude) do
-    params[:longitude].try(:to_f) || request.location.longitude
+    params[:longitude].try(:to_f) || (city || request.location).longitude
   end
 
   expose(:latitude) do
-    params[:latitude].try(:to_f) || request.location.latitude
+    params[:latitude].try(:to_f) || (city || request.location).latitude
   end
 
   expose(:date) do

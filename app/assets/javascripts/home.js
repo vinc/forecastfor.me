@@ -6,6 +6,10 @@ function units() {
   return localStorage.units || 'metric';
 }
 
+function city() {
+  return localStorage.city || '';
+}
+
 function poll(path, callback) {
   console.log('wait ' + path);
 
@@ -32,43 +36,53 @@ function querystring(str) {
   return params;
 }
 
+function redirectToBulletin(params) {
+  var path = '/bulletin?' + $.param(params);
+
+  poll(path, function() {
+    Turbolinks.visit(path);
+  });
+}
+
 $(document).on('ready page:load', function() {
+  var params = {
+    date: querystring(window.location.search).date || 'today',
+  };
+
   if (window.location.pathname === '/') {
-    console.log('waiting for geolocation');
+    params.locale = locale();
+    params.units = units();
 
-    navigator.geolocation.getCurrentPosition(function(pos) {
-      var params = {
-        date: querystring(window.location.search).date || 'today',
-        latitude: pos.coords.latitude.toFixed(2),
-        longitude: pos.coords.longitude.toFixed(2),
-        locale: locale(),
-        units: units()
-      };
-
-      var path = '/bulletin?' + $.param(params);
-
-      console.log('geolocation found');
-      poll(path, function() {
-        Turbolinks.visit(path);
+    if (city()) {
+      params.city = city();
+      redirectToBulletin(params);
+    } else {
+      console.log('waiting for geolocation');
+      navigator.geolocation.getCurrentPosition(function(pos) {
+        console.log('geolocation found');
+        params.latitude = pos.coords.latitude.toFixed(2);
+        params.longitude = pos.coords.longitude.toFixed(2);
+        redirectToBulletin(params);
       });
-    });
+    }
   }
 
   $('#settings form').submit(function(e) {
-    var params = {
-      latitude: $('#settings form [name=latitude]').val(),
-      longitude: $('#settings form [name=longitude]').val(),
-      locale: $('#settings form [name=locale]').val(),
-      units: $('#settings form [name=units]').val()
+    e.preventDefault();
+    params.latitude = $('#settings form [name=latitude]').val();
+    params.longitude = $('#settings form [name=longitude]').val();
+    params.city = $('#settings form [name=city]').val();
+    params.locale = $('#settings form [name=locale]').val();
+    params.units = $('#settings form [name=units]').val();
+    if (params.city) {
+      localStorage.city = params.city;
+      delete params.latitude;
+      delete params.longitude;
+    } else {
+      delete params.city;
     }
-    var path = '/bulletin?' + $.param(params);
-
     localStorage.locale = params.locale;
     localStorage.units = params.units;
-    e.preventDefault();
-
-    //poll(path, function() {
-      Turbolinks.visit(path);
-    //});
+    window.location = '/';
   });
 });

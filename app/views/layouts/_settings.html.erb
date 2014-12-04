@@ -10,6 +10,10 @@
           <input type="hidden" name="latitude" value="<%= latitude rescue '' %>">
           <input type="hidden" name="longitude" value="<%= longitude rescue '' %>">
           <div class="form-group">
+            <label for="settings-city">City</label>
+            <input id="settings-city" type="text" class="form-control" name="city" value="<%= city rescue '' %>">
+          </div>
+          <div class="form-group">
             <label for="settings-locale">Language</label>
             <select id="settings-locale" name="locale" class="form-control">
               <option<%= locale == :en ? ' selected' : '' %> value="en">English</option>
