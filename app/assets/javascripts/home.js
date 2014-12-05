@@ -45,8 +45,8 @@ $(document).on('ready page:load', function() {
         console.log('geolocation found');
         params.latitude = pos.coords.latitude.toFixed(2);
         params.longitude = pos.coords.longitude.toFixed(2);
+        Turbolinks.visit('/bulletin?' + $.param(params));
       });
-      Turbolinks.visit('/bulletin?' + $.param(params));
     }
   }
 
