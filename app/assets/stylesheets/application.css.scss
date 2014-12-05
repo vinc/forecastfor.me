@@ -58,10 +58,10 @@ p {
 article {
   max-width: 30em;
   h2 {
-    margin-top: 5vh;
+    margin-top: 0.5em;
   }
   p.lead {
-    margin-top: 10vh;
+    margin-top: 2em;
   }
 }
 @media (max-width: $screen-sm-min) {
