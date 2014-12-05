@@ -1,3 +1,10 @@
 <div class="throbber">Loading...</div>
 
-<meta http-equiv="refresh" content="10">
+<script>
+  setTimeout(function() {
+    Turbolinks.visit(window.location.href);
+  }, 5000);
+</script>
+<noscript>
+  <meta http-equiv="refresh" content="5">
+</noscript>
