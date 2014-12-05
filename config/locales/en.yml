@@ -21,18 +21,48 @@
 
 en:
   bulletin:
-    weather_75: 'Cloudy'
-    weather_50: 'Mostly cloudy'
-    weather_10: 'Partly cloudy'
-    weather_00: 'Clear'
-    precipitation: "with %{value} %{unit} of rain"
-    temperature: "Temperature from %{min_value} %{unit} at %{min_time} to %{max_value} %{unit} at %{max_time}."
-    wind: "Wind from %{min_value} %{unit} at %{min_time} to %{max_value} %{unit} at %{max_time}."
+    time:
+      morning: "in the morning"
+      afternoon: "in the afternoon"
+      evening: "in the evening"
+      night: "during the night"
+    weather:
+      sky_rain_wind: "%{sky} %{time} with a %{rain} and a %{wind}"
+      sky_rain: "%{sky} %{time} with a %{rain}"
+      sky: "%{sky} %{time}"
+    sky:
+      clear: "clear"
+      mostly_clear: "mostly clear"
+      partly_cloudy: "partly cloudy"
+      mostly_cloudy: "mostly cloudy"
+      cloudy: "cloudy"
+    rain:
+      light: "light rain"
+      moderate: "moderate rain"
+      heavy: "heavy rain"
+      violent: "violent rain"
+    wind:
+      calm: "calm"
+      light_air: "light air"
+      light_breeze: "light breeze"
+      gentle_breeze: "gentle breeze"
+      moderate_breeze: "moderate breeze"
+      fresh_breeze: "fresh breeze"
+      strong_breeze: "strong breeze"
+      moderate_gale: "moderate gale"
+      fresh_gale: "fresh gale"
+      strong_gale: "strong gale"
+      storm: "storm"
+      violent_storm: "violent storm"
+      huricane: "huricane"
+    temperature:
+      around: "temperature around %{median} %{unit}"
+      between: "temperature between %{min} and %{max} %{unit}"
     tweet: "@%{user} %{weather} %{temperature} %{wind}"
   date:
-    date: 'date'
-    today: 'today'
-    tomorrow: 'tomorrow'
+    date: "date"
+    today: "today"
+    tomorrow: "tomorrow"
   time:
     formats:
-      shortest: '%H:%M'
+      shortest: "%H:%M"

@@ -1,3 +1,5 @@
+require 'descriptive_statistics'
+
 class Bulletin
   attr_accessor :date, :longitude, :latitude
 
@@ -44,57 +46,132 @@ class Bulletin
     Geocoder.search([@latitude, @longitude]).first
   end
 
-  def weather
-    cloud_cover = forecasts.map(&:cloud_cover).sum / forecasts.size
+  def night
+    period(0..5)
+  end
 
-    weather =
-      if cloud_cover > 75
-        I18n.t('bulletin.weather_75')
-      elsif cloud_cover > 50
-        I18n.t('bulletin.weather_50')
-      elsif cloud_cover > 10
-        I18n.t('bulletin.weather_10')
+  def morning
+    period(6..11)
+  end
+
+  def afternoon
+    period(12..17)
+  end
+
+  def evening
+    period(18..23)
+  end
+
+  def period(range = 0..23)
+    time =
+      case range
+      when 0..5
+        I18n.t('bulletin.time.night')
+      when 6..11
+        I18n.t('bulletin.time.morning')
+      when 12..17
+        I18n.t('bulletin.time.afternoon')
+      when 18..23
+        I18n.t('bulletin.time.evening')
       else
-        I18n.t('bulletin.weather_00')
+        ''
       end
 
-    precipitations = forecasts.map(&:precipitations).sum
+    values = {
+      sky: sky(range),
+      rain: rain(range),
+      wind: wind(range),
+      time: time
+    }
+    weather =
+      if forecasts[range].map(&:precipitations).median > 0.0
+        if forecasts[range].map(&:wind).median >= 1.5
+          I18n.t('bulletin.weather.sky_rain_wind', values)
+        else
+          I18n.t('bulletin.weather.sky_rain', values)
+        end
+      else
+        I18n.t('bulletin.weather.sky', values)
+      end
 
-    if precipitations > 0.1
-      str = I18n.t('bulletin.precipitation',
-        unit: 'mm',
-        value: '%.1f' % precipitations
-      )
-      "#{weather} #{str}."
+    [weather, temperature(range)].map do |str|
+      str[0] = str[0].capitalize
+      "#{str}."
+    end.join(' ')
+  end
+
+  def sky(range = 0..23)
+    case forecasts[range].map(&:cloud_cover).median
+    when 0...10
+      I18n.t('bulletin.sky.clear')
+    when 10...40
+      I18n.t('bulletin.sky.mostly_clear')
+    when 40...70
+      I18n.t('bulletin.sky.partly_cloudy')
+    when 70...90
+      I18n.t('bulletin.sky.mostly_cloudy')
     else
-      "#{weather}."
+      I18n.t('bulletin.sky.cloudy')
     end
   end
 
-  def temperature
-    sorted_forecasts = forecasts.sort_by { |forecast| forecast.temperature }
-    min = sorted_forecasts.first
-    max = sorted_forecasts.last
-    I18n.t('bulletin.temperature',
-      unit: '°C',
-      min_value: min.temperature,
-      min_time: I18n.l(min.time.in_time_zone, format: :shortest),
-      max_value: max.temperature,
-      max_time: I18n.l(max.time.in_time_zone, format: :shortest)
-    )
+  def rain(range = 0..23)
+    case forecasts[range].map(&:precipitations).median
+    when 0.0...2.5
+      I18n.t('bulletin.rain.light')
+    when 2.5...10.0
+      I18n.t('bulletin.rain.moderate')
+    when 10.0...50.0
+      I18n.t('bulletin.rain.heavy')
+    else
+      I18n.t('bulletin.rain.violent')
+    end
   end
 
-  def wind
-    sorted_forecasts = forecasts.sort_by { |forecast| forecast.wind }
-    min = sorted_forecasts.first
-    max = sorted_forecasts.last
-    I18n.t('bulletin.wind',
-      unit: 'm/s',
-      min_value: min.wind,
-      min_time: I18n.l(min.time.in_time_zone, format: :shortest),
-      max_value: max.wind,
-      max_time: I18n.l(max.time.in_time_zone, format: :shortest)
-    )
+  def wind(range = 0..23)
+    case forecasts[range].map(&:wind).median
+    when 0.0...0.3
+      I18n.t('bulletin.wind.calm')
+    when 0.3...1.5
+      I18n.t('bulletin.wind.light_air')
+    when 1.5...3.3
+      I18n.t('bulletin.wind.light_breeze')
+    when 3.3...5.4
+      I18n.t('bulletin.wind.gentle_breeze')
+    when 5.4...7.9
+      I18n.t('bulletin.wind.moderate_breeze')
+    when 7.9...10.7
+      I18n.t('bulletin.wind.fresh_breeze')
+    when 10.7...13.8
+      I18n.t('bulletin.wind.strong_breeze')
+    when 13.8...17.1
+      I18n.t('bulletin.wind.moderate_gale')
+    when 17.1...20.7
+      I18n.t('bulletin.wind.fresh_gale')
+    when 20.7...24.4
+      I18n.t('bulletin.wind.strong_gale')
+    when 24.4...28.4
+      I18n.t('bulletin.wind.storm')
+    when 28.4...32.6
+      I18n.t('bulletin.wind.violent_storm')
+    else
+      I18n.t('bulletin.wind.huricane')
+    end
+  end
+
+  def temperature(range = 0..23)
+    temperatures = forecasts[range].map(&:temperature)
+    values = {
+      unit: '°C',
+      median: temperatures.median.round,
+      min: temperatures.min,
+      max: temperatures.max
+    }
+    if temperatures.standard_deviation < 2.0
+      I18n.t('bulletin.temperature.around', values)
+    else
+      I18n.t('bulletin.temperature.between', values)
+    end
   end
 
   def statistics(quantity)
