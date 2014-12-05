@@ -58,9 +58,9 @@ p {
 article {
   max-width: 30em;
   h2 {
-    margin-top: 2vh;
+    margin-top: 5vh;
   }
-  > * + * {
+  p.lead {
     margin-top: 10vh;
   }
 }
@@ -80,4 +80,5 @@ article {
 }
 .lead {
   font-size: 1.2em;
+  margin-bottom: 0;
 }
