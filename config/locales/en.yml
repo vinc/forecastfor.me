@@ -26,6 +26,7 @@ en:
       afternoon: "in the afternoon"
       evening: "in the evening"
       night: "during the night"
+      day: "during the day"
     weather:
       sky_rain_wind: "%{sky} %{time} with a %{rain} and a %{wind}"
       sky_rain: "%{sky} %{time} with a %{rain}"

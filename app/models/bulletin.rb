@@ -74,7 +74,7 @@ class Bulletin
       when 18..23
         I18n.t('bulletin.time.evening')
       else
-        ''
+        I18n.t('bulletin.time.day')
       end
 
     values = {
