@@ -67,6 +67,7 @@ $(document).on('ready page:load', function() {
     }
     localStorage.locale = params.locale;
     localStorage.units = params.units;
-    Turbolinks.visit('/');
+    //Turbolinks.visit('/');
+    window.location = '/';
   });
 });
