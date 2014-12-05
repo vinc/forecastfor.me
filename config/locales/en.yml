@@ -29,6 +29,7 @@ en:
     weather:
       sky_rain_wind: "%{sky} %{time} with a %{rain} and a %{wind}"
       sky_rain: "%{sky} %{time} with a %{rain}"
+      sky_wind: "%{sky} %{time} with a %{wind}"
       sky: "%{sky} %{time}"
     sky:
       clear: "clear"

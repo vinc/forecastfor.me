@@ -91,7 +91,11 @@ class Bulletin
           I18n.t('bulletin.weather.sky_rain', values)
         end
       else
-        I18n.t('bulletin.weather.sky', values)
+        if forecasts[range].map(&:wind).median >= 1.5
+          I18n.t('bulletin.weather.sky_wind', values)
+        else
+          I18n.t('bulletin.weather.sky', values)
+        end
       end
 
     [weather, temperature(range)].map do |str|
