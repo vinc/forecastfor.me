@@ -60,7 +60,11 @@ article {
   h2 {
     margin-top: 0.5em;
   }
+  p {
+    display: none;
+  }
   p.lead {
+    display: block;
     margin-top: 2em;
   }
 }

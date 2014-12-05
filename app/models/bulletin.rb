@@ -62,6 +62,10 @@ class Bulletin
     period(18..23)
   end
 
+  def day
+    period(6..22)
+  end
+
   def period(range = 0..23)
     time =
       case range
