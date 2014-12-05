@@ -1,26 +1,13 @@
-function locale() {
-  return localStorage.locale || window.navigator.language.split('-')[0] || 'en';
-}
+var settings = {
+  locale: window.navigator.language.split('-')[0] || 'en',
+  units: 'metric',
+  city: ''
+};
 
-function units() {
-  return localStorage.units || 'metric';
-}
-
-function city() {
-  return localStorage.city || '';
-}
-
-function poll(path, callback) {
-  console.log('wait ' + path);
-
-  $.get(path, function(data, textStatus, jqXHR) {
-    if (jqXHR.status === 200) {
-      console.log('goto ' + path);
-      callback();
-    } else {
-      setTimeout(function() { poll(path, callback) }, 2000);
-    }
-  });
+function restoreSettings() {
+  for (k in settings) {
+    settings[k] = localStorage[k] || settings[k];
+  }
 }
 
 function querystring(str) {
@@ -36,36 +23,30 @@ function querystring(str) {
   return params;
 }
 
-function redirectToBulletin(params) {
-  var path = '/bulletin?' + $.param(params);
-
-  poll(path, function() {
-    Turbolinks.visit(path);
-  });
-}
-
 $(document).on('ready page:load', function() {
   var params = {
     date: querystring(window.location.search).date || 'today',
   };
 
-  $('#settings form [name=city]').val(city());
+  restoreSettings();
+  $('#settings form [name=city]').val(settings.city);
 
   if (window.location.pathname === '/') {
-    params.locale = locale();
-    params.units = units();
+    params.locale = settings.locale;
+    params.units = settings.units;
 
-    if (city()) {
-      params.city = city();
-      redirectToBulletin(params);
+    if (settings.city) {
+      params.city = settings.city;
+      path = '/bulletin?' + $.param(params);
+      Turbolinks.visit('/bulletin?' + $.param(params));
     } else {
       console.log('waiting for geolocation');
       navigator.geolocation.getCurrentPosition(function(pos) {
         console.log('geolocation found');
         params.latitude = pos.coords.latitude.toFixed(2);
         params.longitude = pos.coords.longitude.toFixed(2);
-        redirectToBulletin(params);
       });
+      Turbolinks.visit('/bulletin?' + $.param(params));
     }
   }
 
