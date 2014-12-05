@@ -41,8 +41,7 @@ class Bulletin
   end
 
   def location
-    address = Geocoder.search([@latitude, @longitude]).first
-    %w(city country).map { |c| address.send(c) }.join(', ')
+    Geocoder.search([@latitude, @longitude]).first
   end
 
   def weather
@@ -107,6 +106,7 @@ class Bulletin
   def as_json(options = {})
     {
       date: @date,
+      location: %w(city country).map { |c| location.send(c) }.join(', '),
       longitude: forecasts.first.longitude,
       latitude: forecasts.first.latitude,
       precipitations_stats: statistics(:precipitations),

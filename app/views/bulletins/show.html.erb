@@ -1,8 +1,8 @@
-<% content_for(:title, "Forecast for #{bulletin.location}") %>
+<% content_for(:title, "Forecast for #{bulletin.location.city}, #{bulletin.location.country}") %>
 
 <article>
   <header>
-    <h1><%= bulletin.location %></h1>
+    <h1><%= bulletin.location.city %></h1>
     <% if bulletin.date == Date.today %>
       <h2><%= t('date.today').capitalize %></h2>
     <% else %>
