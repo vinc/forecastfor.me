@@ -24,8 +24,7 @@ class Forecast
   end
 
   def precipitations
-    # Amount of precipitations during one hour
-    self.read(:prate).round(1)
+    (self.read(:prate) * 1.hour).round(1)
   end
 
   def temperature
