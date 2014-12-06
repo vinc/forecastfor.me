@@ -33,10 +33,10 @@ class BulletinsController < ApplicationController
       respond_with(bulletin)
     else
       BulletinWorker.perform_async(str, longitude, latitude)
-      respond_with(bulletin, status: :accepted) do |format|
-        format.json { render(json: {}) }
-        format.html { render(template: 'bulletins/busy') }
-        format.text { render(template: 'bulletins/busy') }
+      respond_to do |format|
+        format.json { render(json: {}, status: :accepted) }
+        format.html { render(template: 'bulletins/busy', status: :accepted) }
+        format.text { render(template: 'bulletins/busy', status: :accepted) }
       end
     end
   end
