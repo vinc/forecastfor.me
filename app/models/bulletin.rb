@@ -194,12 +194,16 @@ class Bulletin
       location: %w(city country).map { |c| location.send(c) }.join(', '),
       longitude: forecasts.first.longitude,
       latitude: forecasts.first.latitude,
+      precipitations_hourly: forecasts.map(&:precipitations),
       precipitations_stats: statistics(:precipitations),
       precipitations_unit: 'mm',
+      temperature_hourly: forecasts.map(&:temperature),
       temperature_stats: statistics(:temperature),
       temperature_unit: '°C',
+      wind_hourly: forecasts.map(&:wind),
       wind_stats: statistics(:wind),
       wind_unit: 'm/s',
+      cloud_cover_hourly: forecasts.map(&:cloud_cover),
       cloud_cover_stats: statistics(:cloud_cover),
       cloud_cover_unit: '%'
     }
