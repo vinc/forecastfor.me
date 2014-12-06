@@ -205,7 +205,14 @@ class Bulletin
       wind_unit: 'm/s',
       cloud_cover_hourly: forecasts.map(&:cloud_cover),
       cloud_cover_stats: statistics(:cloud_cover),
-      cloud_cover_unit: '%'
+      cloud_cover_unit: '%',
+      forecasts: {
+        day: day,
+        night: night,
+        morning: morning,
+        afternoon: afternoon,
+        evening: evening
+      }
     }
   end
 end
