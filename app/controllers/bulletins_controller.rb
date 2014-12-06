@@ -1,6 +1,8 @@
 require 'descriptive_statistics'
 
 class BulletinsController < ApplicationController
+  respond_to :html, :json, :text
+
   expose(:city) do
     Geocoder.search(params[:city]).first if params.include?(:city)
   end
@@ -31,9 +33,10 @@ class BulletinsController < ApplicationController
       respond_with(bulletin)
     else
       BulletinWorker.perform_async(str, longitude, latitude)
-      respond_to do |format|
-        format.json { render(json: {}, status: :accepted) }
-        format.html { render(template: 'bulletins/busy', status: :accepted) }
+      respond_with(bulletin, status: :accepted) do |format|
+        format.json { render(json: {}) }
+        format.html { render(template: 'bulletins/busy') }
+        format.text { render(template: 'bulletins/busy') }
       end
     end
   end

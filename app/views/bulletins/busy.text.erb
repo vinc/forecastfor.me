@@ -1,0 +1,1 @@
+ForecastFor <% if bulletin.date == Date.today %><%= t('date.today') %><% else %><%= l(bulletin.date, format: '%A') %><% end %> in <%= bulletin.location.city %> is being generated, wait a few seconds and reload.
