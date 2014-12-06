@@ -191,7 +191,10 @@ class Bulletin
   def as_json(options = {})
     {
       date: @date,
-      location: %w(city country).map { |c| location.send(c) }.join(', '),
+      location: {
+        city: location.city,
+        country: location.country
+      },
       longitude: forecasts.first.longitude,
       latitude: forecasts.first.latitude,
       precipitations_hourly: forecasts.map(&:precipitations),
