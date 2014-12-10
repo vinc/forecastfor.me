@@ -10,7 +10,7 @@ class BulletinWorker
 
     date = Time.zone.parse(str).to_date
     bulletin = Bulletin.new(date, longitude: longitude, latitude: latitude)
-    %w(weather temperature wind).each { |method| bulletin.send(method) }
+    bulletin.to_json # Build redis cache
     Redis.current.setex(key, 1.hour, 'done')
   end
 end
