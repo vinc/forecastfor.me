@@ -22,6 +22,7 @@ RUN chown app /home/app -R
 
 WORKDIR /home/app/webapp
 RUN su app -c "bundle install --without development:test --path vendor/bundle --deployment"
+RUN su app -c "bin/rake wgrib2:compile"
 RUN su app -c "bin/rake assets:precompile RAILS_ENV=production"
 
 # Clean up
