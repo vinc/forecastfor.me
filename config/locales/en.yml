@@ -60,7 +60,7 @@ en:
     temperature:
       around: "temperature around %{median} %{unit}"
       between: "temperature between %{min} and %{max} %{unit}"
-    tweet: "@%{user} %{weather} %{temperature} %{wind}"
+    tweet: "@%{user} %{bulletin}"
   date:
     date: "date"
     today: "today"

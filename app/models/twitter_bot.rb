@@ -31,11 +31,9 @@ class TwitterBot
   end
 
   def tweet_bulletin(tweet, bulletin)
-    text = I18n.t('bulletin_tweet',
+    text = I18n.t('bulletin.tweet',
       user: tweet.user.screen_name,
-      weather: bulletin.weather,
-      temperature: bulletin.temperature,
-      wind: bulletin.wind
+      bulletin: bulletin.day
     )
     @rest_client.update(text, { in_reply_to_status: tweet })
     Rails.logger.info("Sent tweet: '#{text}'")
